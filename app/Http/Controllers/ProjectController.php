@@ -10,11 +10,8 @@ class ProjectController extends Controller
 {
     public function index(Request $request)
     {
-        $projects = Project::where('status', '!=', 'Idea')
-            ->with('category', 'tags', 'links')
-            ->get();
-
-        return view('projects.index', compact('projects'));
+        $categories = Category::with('projects.tags', 'projects.links')->get();
+        return view('projects.index', compact('categories'));
     }
 
     public function show(Project $project)

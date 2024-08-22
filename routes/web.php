@@ -8,8 +8,9 @@ use App\Http\Controllers\TagController;
 
 Auth::routes(['register' => false]);
 
+Route::get('/', [ProjectController::class, 'index'])->name('home');
+
 Route::middleware('guest')->group(function () {
-    Route::get('/', [ProjectController::class, 'index'])->name('home');
     Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 });
 
@@ -35,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
     Route::get('/tags/{tag}/edit', [TagController::class, 'edit'])->name('tags.edit');
     Route::put('/tags/{tag}', [TagController::class, 'update'])->name('tags.update');
+
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
 });
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
