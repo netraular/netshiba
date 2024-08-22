@@ -27,7 +27,16 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
-        $project = Project::create($request->all());
+        $project = Project::create($request->except('links'));
+    
+        if ($request->has('links')) {
+            foreach ($request->links as $link) {
+                if (!empty($link)) {
+                    $project->links()->create(['url' => $link]);
+                }
+            }
+        }
+    
         return redirect()->route('projects.show', $project);
     }
 
