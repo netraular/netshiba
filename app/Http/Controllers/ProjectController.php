@@ -31,12 +31,24 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
-        $project = Project::create($request->except('links'));
+        // Crear el proyecto
+        $project = Project::create($request->except('links', 'tags'));
     
+        // Procesar los enlaces
         if ($request->has('links')) {
             foreach ($request->links as $link) {
                 if (!empty($link)) {
                     $project->links()->create(['url' => $link]);
+                }
+            }
+        }
+    
+        // Procesar los tags
+        if ($request->has('tags')) {
+            foreach ($request->tags as $tagName) {
+                if (!empty($tagName)) {
+                    $tag = Tag::firstOrCreate(['name' => $tagName]);
+                    $project->tags()->attach($tag);
                 }
             }
         }

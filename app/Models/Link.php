@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Link extends Model
 {
-    protected $fillable = ['project_id', 'name', 'url', 'image'];
+    protected $fillable = ['project_id', 'name', 'url', 'icon'];
 
     public function project()
     {
