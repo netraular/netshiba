@@ -6,6 +6,7 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 
 use App\Models\Category;
+use App\Models\Tag;
 class ProjectController extends Controller
 {
     public function index(Request $request)
@@ -22,7 +23,10 @@ class ProjectController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('projects.create', compact('categories'));
+        $tags = Tag::all();
+        $statuses = ['En proceso', 'Terminado', 'Idea'];
+    
+        return view('projects.create', compact('categories', 'tags', 'statuses'));
     }
 
     public function store(Request $request)

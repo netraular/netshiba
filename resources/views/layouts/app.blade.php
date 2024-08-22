@@ -15,6 +15,11 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
+    <!-- Select2 scripts for improved select forms -->
+    <link href="vendor/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="vendor/select2/dist/js/select2.min.js"></script>
+
 </head>
 <body>
     <div id="app">
