@@ -4,7 +4,9 @@
 @section('content')
 <div class="container">
     <h1>Proyectos</h1>
+    @auth
     <a href="{{ route('projects.create') }}" class="btn btn-primary">Añadir Proyecto</a>
+    @endauth
     <table class="table">
         <thead>
             <tr>
