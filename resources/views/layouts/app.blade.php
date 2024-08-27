@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="dark">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -94,5 +94,31 @@
             @yield('content')
         </main>
     </div>
+<!-- Dark Mode Toggle Button -->
+<button id="dark-mode-toggle" class="btn btn-light position-fixed bottom-0 end-0 m-3">
+    <i id="dark-mode-icon" class="bi bi-sun-fill"></i>
+</button>
+
+<script>
+    document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+        const htmlElement = document.documentElement;
+        const iconElement = document.getElementById('dark-mode-icon');
+        const toggleButton = document.getElementById('dark-mode-toggle');
+
+        if (htmlElement.getAttribute('data-bs-theme') === 'dark') {
+            htmlElement.setAttribute('data-bs-theme', 'light');
+            iconElement.classList.remove('bi-sun-fill');
+            iconElement.classList.add('bi-moon-fill');
+            toggleButton.classList.add('btn-dark');
+            toggleButton.classList.remove('btn-light');
+        } else {
+            htmlElement.setAttribute('data-bs-theme', 'dark');
+            iconElement.classList.remove('bi-moon-fill');
+            iconElement.classList.add('bi-sun-fill');
+            toggleButton.classList.add('btn-light');
+            toggleButton.classList.remove('btn-dark');
+        }
+    });
+</script>
 </body>
 </html>
