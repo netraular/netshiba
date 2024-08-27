@@ -27,7 +27,7 @@
 <body>
     <div id="app">
         @auth
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -95,7 +95,7 @@
         </main>
     </div>
 <!-- Dark Mode Toggle Button -->
-<button id="dark-mode-toggle" class="btn btn-light position-fixed bottom-0 end-0 m-3">
+<button id="dark-mode-toggle" class="btn btn-secondary position-fixed bottom-0 end-0 m-3" style="display: block;">
     <i id="dark-mode-icon" class="bi bi-sun-fill"></i>
 </button>
 
@@ -109,16 +109,28 @@
             htmlElement.setAttribute('data-bs-theme', 'light');
             iconElement.classList.remove('bi-sun-fill');
             iconElement.classList.add('bi-moon-fill');
-            toggleButton.classList.add('btn-dark');
-            toggleButton.classList.remove('btn-light');
         } else {
             htmlElement.setAttribute('data-bs-theme', 'dark');
             iconElement.classList.remove('bi-moon-fill');
             iconElement.classList.add('bi-sun-fill');
-            toggleButton.classList.add('btn-light');
-            toggleButton.classList.remove('btn-dark');
         }
     });
+
+    // Function to toggle button visibility based on scroll position
+    function toggleButtonVisibility() {
+        const toggleButton = document.getElementById('dark-mode-toggle');
+        if (window.scrollY === 0) {
+            toggleButton.style.display = 'block';
+        } else {
+            toggleButton.style.display = 'none';
+        }
+    }
+
+    // Initial check on page load
+    toggleButtonVisibility();
+
+    // Add scroll event listener
+    window.addEventListener('scroll', toggleButtonVisibility);
 </script>
 </body>
 </html>
