@@ -15,6 +15,10 @@
             <label for="description">Descripción</label>
             <textarea name="description" class="form-control" required>{{ $status->description }}</textarea>
         </div>
+        <div class="form-group">
+            <label for="class">Clase</label>
+            <input type="text" name="class" class="form-control" value="{{ $status->class }}">
+        </div>
         <button type="submit" class="btn btn-primary">Actualizar</button>
     </form>
 </div>

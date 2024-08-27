@@ -14,6 +14,10 @@
             <label for="description">Descripción</label>
             <textarea name="description" class="form-control" required></textarea>
         </div>
+        <div class="form-group">
+            <label for="class">Clase</label>
+            <input type="text" name="class" class="form-control">
+        </div>
         <button type="submit" class="btn btn-primary">Añadir</button>
     </form>
 </div>
