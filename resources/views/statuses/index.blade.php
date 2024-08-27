@@ -16,7 +16,7 @@
         <tbody>
             @foreach($statuses as $status)
             <tr>
-                <td><span class=" {{ $status->class }}">{{ $status->name }}</span></td>
+                <td><span class="{{ $status->class }}">{{ $status->name }}</span></td>
                 <td>{{ $status->description }}</td>
                 <td>
                     <a href="{{ route('statuses.edit', $status) }}" class="btn btn-sm btn-warning">Editar</a>
