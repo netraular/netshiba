@@ -46,9 +46,11 @@
                         <!-- Fifth Zone: Links -->
                         <p class="card-text text-end">
                             @foreach($project->links as $link)
-                                <a href="{{ $link->url }}" class="btn {{ $link->class }} mb-2" title="{{ $link->name }}">
-                                    <i class="{{ $link->icon }}"></i>
-                                </a>
+                                @if($link->hidden == 0 || ($link->hidden == 1 && Auth::check()))
+                                    <a href="{{ $link->url }}" class="btn {{ $link->class }} mb-2" title="{{ $link->name }}">
+                                        <i class="{{ $link->icon }}"></i>
+                                    </a>
+                                @endif
                             @endforeach
                         </p>
                     </div>

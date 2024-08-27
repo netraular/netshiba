@@ -7,7 +7,6 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TagController;
 
 Auth::routes(['register' => false]);
-
 Route::get('/', [ProjectController::class, 'index'])->name('home');
 
 Route::middleware('guest')->group(function () {
