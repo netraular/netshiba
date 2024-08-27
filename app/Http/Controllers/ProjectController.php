@@ -11,8 +11,8 @@ class ProjectController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = Category::with('projects.tags', 'projects.links')->get();
-        return view('projects.index', compact('categories'));
+        $projects = Project::with('versions', 'tags', 'links')->get();
+        return view('projects.index', compact('projects'));
     }
 
     public function show(Project $project)
