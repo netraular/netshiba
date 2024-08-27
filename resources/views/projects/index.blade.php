@@ -2,7 +2,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-xxl">
     <h1>Proyectos</h1>
     @auth
     <a href="{{ route('projects.create') }}" class="btn btn-primary">Añadir Proyecto</a>
@@ -16,19 +16,31 @@
     <!-- Mostrar proyectos -->
     <div class="row">
         @foreach($projects as $project)
-            <div class="col-md-3 mb-4">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div class="card h-100">
                     <!-- First Zone: Background Image -->
                     <div class="card-img-top" style="background-image: url('{{ $project->background }}'); height: 150px; background-size: cover; background-position: center; position: relative;">
                         <!-- Button for logged users -->
                         @auth
-                        <button class="btn btn-secondary position-absolute top-0 end-0 m-2" style="z-index: 1;">
-                            <i class="bi bi-three-dots"></i>
-                        </button>
+                        <div class="dropdown position-absolute top-0 end-0 m-2" style="z-index: 1;">
+                            <button class="btn btn-secondary dropdown-toggle bg-dark" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="{{ route('projects.show', $project) }}">Detalles</a></li>
+                                <li><a class="dropdown-item" href="{{ route('projects.edit', $project) }}">Editar</a></li>
+                            </ul>
+                        </div>
                         @endauth
                         <!-- Second Zone: Project Logo -->
                         <div class="d-flex justify-content-center align-items-center" style="position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%);">
-                            <img src="{{ $project->logo }}" alt="{{ $project->name }}" class="rounded-circle bg-secondary" style="width: 100px; height: 100px;">
+
+                            @if($project->logo)
+                                <img src="{{ $project->logo }}" alt="{{ $project->name }}" class="rounded-circle bg-secondary" style="width: 100px; height: 100px;">
+                            @else
+                                <div class="text-center bg-secondary" style="width: 100px; height: 100px; line-height: 100px;border-radius: 50%;">
+                                    {{ $project->name }}
+                                </div>
+                            @endif
+
                         </div>
                     </div>
                     <div class="card-body" style="margin-top: 50px;">

@@ -28,7 +28,7 @@
     <div id="app">
         @auth
         <nav class="navbar navbar-expand-md shadow-sm">
-            <div class="container">
+            <div class="container-xxl">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
