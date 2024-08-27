@@ -6,11 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
-    protected $fillable = ['name', 'description', 'category_id', 'status','logo','background'];
+    protected $fillable = ['name', 'description', 'category_id', 'status_id', 'logo', 'background'];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
     }
 
     public function versions()
