@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Version extends Model
 {
-    protected $fillable = ['project_id', 'version_number', 'description'];
+    public $timestamps = false; // Disable timestamps
+
+    protected $fillable = ['project_id', 'version_number', 'description', 'date'];
 
     public function project()
     {
