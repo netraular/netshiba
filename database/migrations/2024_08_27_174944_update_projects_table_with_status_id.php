@@ -18,7 +18,7 @@ return new class extends Migration
             }
 
             // Agregar la columna 'status_id' con relación a la tabla 'status' y permitir null
-            $table->foreignId('status_id')->after('category_id')->nullable()->constrained('status')->onDelete('set null');
+            $table->foreignId('status_id')->after('category_id')->nullable()->constrained('statuses')->onDelete('set null');
         });
     }
 

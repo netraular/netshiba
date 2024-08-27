@@ -48,6 +48,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('tags.index') }}">Tags</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('statuses.index') }}">Estados</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

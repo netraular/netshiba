@@ -5,6 +5,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\StatusController;
 
 Auth::routes(['register' => false]);
 Route::get('/', [ProjectController::class, 'index'])->name('home');
@@ -14,6 +15,8 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
+
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
     Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
@@ -36,6 +39,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/tags/{tag}/edit', [TagController::class, 'edit'])->name('tags.edit');
     Route::put('/tags/{tag}', [TagController::class, 'update'])->name('tags.update');
 
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
+    Route::resource('statuses', StatusController::class);
 });
 
