@@ -1,4 +1,3 @@
-<!-- resources/views/projects/create.blade.php -->
 @extends('layouts.app')
 
 @section('content')
@@ -8,73 +7,100 @@
         @csrf
         <div class="form-group">
             <label for="name">Nombre</label>
-            <input type="text" name="name" class="form-control" required>
+            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+            @error('name')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-group">
             <label for="description">Descripción</label>
-            <textarea name="description" class="form-control"></textarea>
+            <textarea name="description" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+            @error('description')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-group">
             <label for="category_id">Categoría</label>
-            <select name="category_id" class="form-control" id="categorySelect" required>
+            <select name="category_id" class="form-control @error('category_id') is-invalid @enderror" required>
                 <option value="">Selecciona una categoría</option>
                 @foreach($categories as $category)
-                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                 @endforeach
             </select>
+            @error('category_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-group">
             <label for="status">Estado</label>
-            <select name="status" class="form-control" required>
+            <select name="status" class="form-control @error('status') is-invalid @enderror" required>
                 <option value="">Selecciona un estado</option>
                 @foreach($statuses as $status)
-                <option value="{{ $status }}">{{ $status }}</option>
+                <option value="{{ $status }}" {{ old('status') == $status ? 'selected' : '' }}>{{ $status }}</option>
                 @endforeach
             </select>
+            @error('status')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-group">
             <label for="logo">Logo del Proyecto</label>
-            <input type="file" name="logo" class="form-control-file" id="logoInput" accept="image/*">
+            <input type="file" name="logo" class="form-control-file @error('logo') is-invalid @enderror" id="logoInput" accept="image/*">
             <div id="croppedLogo" style="display: none; margin-top: 10px;">
-                <img id="croppedLogoImage" src="#" alt="Logo recortado" style="max-width: 100px;">
+                <img id="output" src="#" alt="Logo recortado" style="max-width: 100px;">
             </div>
+            @error('logo')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-group">
             <label for="background">Banner del Proyecto</label>
-            <input type="file" name="background" class="form-control-file" accept="image/*">
+            <input type="file" name="background" class="form-control-file @error('background') is-invalid @enderror" accept="image/*">
+            @error('background')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-group">
             <label for="complexity">Complejidad (1-10)</label>
             <div class="d-flex align-items-center">
-                <input type="range" class="form-range" min="1" max="10" id="complexityRange" name="complexity" required>
-                <input type="number" class="form-control ml-2" id="complexityValue" min="1" max="10" name="complexity" style="width: 60px;" required>
+                <input type="range" class="form-range @error('complexity') is-invalid @enderror" min="1" max="10" id="complexityRange" name="complexity" value="{{ old('complexity', 1) }}" required>
+                <input type="number" class="form-control ml-2 @error('complexity') is-invalid @enderror" id="complexityValue" min="1" max="10" name="complexity" value="{{ old('complexity', 1) }}" style="width: 60px;" required>
             </div>
+            @error('complexity')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-group">
             <label for="order">Orden</label>
-            <input type="number" name="order" class="form-control" min="0" required>
+            <input type="number" name="order" class="form-control @error('order') is-invalid @enderror" min="0" value="{{ old('order') }}" required>
+            @error('order')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="form-group">
             <label>Enlaces</label>
             <div id="linksContainer">
+                @foreach(old('links', ['']) as $index => $link)
                 <div class="input-group mb-2">
-                    <input type="text" name="links[]" class="form-control link-input" placeholder="URL del enlace">
+                    <input type="text" name="links[]" class="form-control link-input" placeholder="URL del enlace" value="{{ $link }}">
                     <div class="input-group-append">
                         <button type="button" class="btn btn-link text-danger p-0" onclick="removeLink(this)">
                             <i class="bi bi-x-circle"></i>
                         </button>
                     </div>
                 </div>
+                @endforeach
             </div>
         </div>
 
         <div class="form-group">
             <label>Tags</label>
             <div id="tagsContainer" class="row">
+                @foreach(old('tags', ['']) as $index => $tag)
                 <div class="col-md-2 mb-2">
                     <div class="input-group">
-                        <input type="text" name="tags[]" class="form-control tag-input" placeholder="Tag">
+                        <input type="text" name="tags[]" class="form-control tag-input" placeholder="Tag" value="{{ $tag }}">
                         <div class="input-group-append">
                             <button type="button" class="btn btn-link text-secondary p-0" onclick="removeTag(this)">
                                 <i class="bi bi-x-circle"></i>
@@ -82,6 +108,7 @@
                         </div>
                     </div>
                 </div>
+                @endforeach
             </div>
         </div>
 
@@ -90,52 +117,81 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="cropperModal" tabindex="-1" aria-labelledby="cropperModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade" id="cropModal" tabindex="-1" aria-labelledby="cropModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="cropperModalLabel">Recortar Imagen</h5>
+                <h5 class="modal-title" id="cropModalLabel">Recortar Imagen</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <img id="imageToCrop" src="#" alt="Imagen a recortar" style="max-width: 100%;">
+                <img id="image" src="#" alt="Imagen a recortar" style="max-width: 100%; width: 100%;">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="cropImageButton">Aceptar</button>
+                <button type="button" class="btn btn-primary" id="cropButton">Aceptar</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('input', function(event) {
-        if (event.target.id === 'complexityRange') {
-            document.getElementById('complexityValue').value = event.target.value;
-        } else if (event.target.id === 'complexityValue') {
-            document.getElementById('complexityRange').value = event.target.value;
-        } else if (event.target.classList.contains('link-input')) {
-            const linksContainer = document.getElementById('linksContainer');
-            const linkInputs = linksContainer.querySelectorAll('.link-input');
-            const allFilled = Array.from(linkInputs).every(input => input.value.trim() !== '');
+    document.getElementById('logoInput').addEventListener('change', loadFile);
 
-            if (allFilled) {
-                addLinkInput();
-            }
+    function loadFile(event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.style.height = '8.75rem';
+        output.style.width = '140px'; // Asegura que el ancho sea siempre 140px
+        output.style.border = '2px dotted black';
+        output.style.borderRadius = '6px';
 
-            updateRemoveButtons('link');
-        } else if (event.target.classList.contains('tag-input')) {
-            const tagsContainer = document.getElementById('tagsContainer');
-            const tagInputs = tagsContainer.querySelectorAll('.tag-input');
-            const allFilled = Array.from(tagInputs).every(input => input.value.trim() !== '');
+        // Open the modal
+        $('#cropModal').modal('show');
 
-            if (allFilled) {
-                addTagInput();
-            }
+        // Initialize the cropper
+        var image = document.getElementById('image');
+        image.src = URL.createObjectURL(event.target.files[0]);
+        var cropper = new Cropper(image, {
+            aspectRatio: 1 / 1, // Square crop
+            viewMode: 1,
+            dragMode: 'move',
+            autoCropArea: 1,
+            cropBoxMovable: true,
+            cropBoxResizable: true,
+            responsive: true,
+            restore: false,
+            guides: false,
+            center: false,
+            highlight: false,
+            cropBoxMovable: true,
+            cropBoxResizable: true,
+            toggleDragModeOnDblclick: false,
+        });
 
-            updateRemoveButtons('tag');
-        }
-    });
+        // Handle the crop button click
+        document.getElementById('cropButton').addEventListener('click', function () {
+            var canvas = cropper.getCroppedCanvas();
+            output.src = canvas.toDataURL('image/jpeg', 0.9); // Convert to JPEG with 90% quality
+            $('#cropModal').modal('hide');
+            cropper.destroy();
+
+            // Convert canvas to Blob and create a new File object
+            canvas.toBlob(function (blob) {
+                var file = new File([blob], 'cropped_image.jpeg', { type: 'image/jpeg' });
+
+                // Create a new DataTransfer object
+                var dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+
+                // Set the file input's files to the new file
+                document.getElementById('logoInput').files = dataTransfer.files;
+
+                // Show the cropped image
+                document.getElementById('croppedLogo').style.display = 'block';
+            }, 'image/jpeg', 0.9); // Convert to JPEG with 90% quality
+        });
+    }
 
     function addLinkInput() {
         const linksContainer = document.getElementById('linksContainer');
@@ -154,7 +210,6 @@
 
     function removeLink(button) {
         button.closest('.input-group').remove();
-        updateRemoveButtons('link');
     }
 
     function addTagInput() {
@@ -176,92 +231,35 @@
 
     function removeTag(button) {
         button.closest('.col-md-2').remove();
-        updateRemoveButtons('tag');
     }
 
-    function updateRemoveButtons(type) {
-        const containerId = type === 'link' ? 'linksContainer' : 'tagsContainer';
-        const inputClass = type === 'link' ? 'link-input' : 'tag-input';
-        const container = document.getElementById(containerId);
-        const inputs = container.querySelectorAll(`.${inputClass}`);
-        const emptyInputs = Array.from(inputs).filter(input => input.value.trim() === '');
+    document.addEventListener('input', function(event) {
+        if (event.target.classList.contains('link-input')) {
+            const linksContainer = document.getElementById('linksContainer');
+            const linkInputs = linksContainer.querySelectorAll('.link-input');
+            const allFilled = Array.from(linkInputs).every(input => input.value.trim() !== '');
 
-        inputs.forEach(input => {
-            const removeButton = input.closest('.input-group').querySelector('button');
-            if (emptyInputs.length === 1 && emptyInputs[0] === input) {
-                removeButton.style.display = 'none';
-            } else {
-                removeButton.style.display = '';
+            if (allFilled) {
+                addLinkInput();
             }
-        });
-    }
+        } else if (event.target.classList.contains('tag-input')) {
+            const tagsContainer = document.getElementById('tagsContainer');
+            const tagInputs = tagsContainer.querySelectorAll('.tag-input');
+            const allFilled = Array.from(tagInputs).every(input => input.value.trim() !== '');
 
-    // Initial call to ensure the correct state of remove buttons
-    updateRemoveButtons('link');
-    updateRemoveButtons('tag');
-
-    // Cropper.js functionality
-    let cropper;
-    const logoInput = document.getElementById('logoInput');
-    const imageToCrop = document.getElementById('imageToCrop');
-    const croppedLogo = document.getElementById('croppedLogo');
-    const croppedLogoImage = document.getElementById('croppedLogoImage');
-    const cropperModal = new bootstrap.Modal(document.getElementById('cropperModal'));
-
-    logoInput.addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imageToCrop.src = e.target.result;
-                cropperModal.show();
-                if (cropper) {
-                    cropper.destroy();
-                }
-                cropper = new Cropper(imageToCrop, {
-                    aspectRatio: 1 / 1,
-                    viewMode: 1,
-                    dragMode: 'move',
-                    autoCropArea: 1,
-                    cropBoxMovable: false,
-                    cropBoxResizable: false,
-                    background: false,
-                });
-            };
-            reader.readAsDataURL(file);
+            if (allFilled) {
+                addTagInput();
+            }
         }
     });
 
-    document.getElementById('cropImageButton').addEventListener('click', function() {
-        if (cropper) {
-            const croppedCanvas = cropper.getCroppedCanvas();
-            croppedLogoImage.src = croppedCanvas.toDataURL();
-            croppedLogo.style.display = 'block';
-            cropperModal.hide();
-        }
+    // Sync slider and input value
+    document.getElementById('complexityRange').addEventListener('input', function() {
+        document.getElementById('complexityValue').value = this.value;
     });
 
-    document.getElementById('projectForm').addEventListener('submit', function(event) {
-        if (cropper) {
-            cropper.getCroppedCanvas().toBlob(function(blob) {
-                const formData = new FormData(document.getElementById('projectForm'));
-                formData.append('logo', blob);
-                fetch(event.target.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    }
-                }).then(response => {
-                    if (response.ok) {
-                        window.location.href = response.url;
-                    } else {
-                        alert('Error al subir la imagen');
-                    }
-                });
-            });
-            event.preventDefault();
-        }
+    document.getElementById('complexityValue').addEventListener('input', function() {
+        document.getElementById('complexityRange').value = this.value;
     });
 </script>
 @endsection

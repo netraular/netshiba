@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Category;
 use App\Models\Tag;
+use App\Models\Link;
 class ProjectController extends Controller
 {
     public function index(Request $request)
@@ -30,6 +31,57 @@ class ProjectController extends Controller
     }
 
     public function store(Request $request)
+{
+    $request->validate([
+        'name' => 'required',
+        'description' => 'nullable',
+        'category_id' => 'required|exists:categories,id',
+        'status' => 'required',
+        'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'background' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'complexity' => 'required|integer|min:1|max:10',
+    ]);
+
+    $projectData = $request->except('links', 'tags', 'logo', 'background');
+
+    if ($request->hasFile('logo')) {
+        $projectData['logo'] = $request->file('logo')->store('logos', 'public');
+    }
+
+    if ($request->hasFile('background')) {
+        $projectData['background'] = $request->file('background')->store('backgrounds', 'public');
+    }
+
+    $project = Project::create($projectData);
+
+    if ($request->has('links')) {
+        foreach ($request->links as $link) {
+            if (!empty($link)) {
+                $project->links()->create(['url' => $link]);
+            }
+        }
+    }
+
+    if ($request->has('tags')) {
+        foreach ($request->tags as $tagName) {
+            if (!empty($tagName)) {
+                $tag = Tag::firstOrCreate(['name' => $tagName]);
+                $project->tags()->attach($tag);
+            }
+        }
+    }
+
+    return redirect()->route('projects.show', $project);
+}
+    public function edit(Project $project)
+    {
+        $categories = Category::all();
+        $tags = Tag::all();
+        $statuses = ['En proceso', 'Terminado', 'Idea'];
+        return view('projects.edit', compact('project', 'categories', 'tags', 'statuses'));
+    }
+
+    public function update(Request $request, Project $project)
     {
         $request->validate([
             'name' => 'required',
@@ -41,7 +93,7 @@ class ProjectController extends Controller
             'complexity' => 'required|integer|min:1|max:10',
         ]);
 
-        $projectData = $request->except('links', 'tags', 'logo', 'background');
+        $projectData = $request->except('links', 'tags', 'logo', 'background', 'link_icons', 'link_names', 'link_hiddens', 'link_ids', 'link_delete');
 
         if ($request->hasFile('logo')) {
             $projectData['logo'] = $request->file('logo')->store('logos', 'public');
@@ -51,16 +103,39 @@ class ProjectController extends Controller
             $projectData['background'] = $request->file('background')->store('backgrounds', 'public');
         }
 
-        $project = Project::create($projectData);
+        $project->update($projectData);
 
+        // Update links
         if ($request->has('links')) {
-            foreach ($request->links as $link) {
+            foreach ($request->links as $index => $link) {
                 if (!empty($link)) {
-                    $project->links()->create(['url' => $link]);
+                    $linkId = $request->link_ids[$index] ?? null;
+                    $linkDelete = $request->link_delete[$index] ?? 'false';
+
+                    if ($linkDelete === 'true') {
+                        if ($linkId) {
+                            Link::where('id', $linkId)->delete();
+                        }
+                    } else {
+                        $linkData = [
+                            'url' => $link,
+                            'icon' => $request->link_icons[$index] ?? '',
+                            'name' => $request->link_names[$index] ?? '',
+                            'hidden' => in_array($linkId, $request->link_hiddens) ? 1 : 0,
+                        ];
+
+                        if ($linkId) {
+                            Link::where('id', $linkId)->update($linkData);
+                        } else {
+                            $project->links()->create($linkData);
+                        }
+                    }
                 }
             }
         }
 
+        // Update tags
+        $project->tags()->sync([]);
         if ($request->has('tags')) {
             foreach ($request->tags as $tagName) {
                 if (!empty($tagName)) {
@@ -70,18 +145,6 @@ class ProjectController extends Controller
             }
         }
 
-        return redirect()->route('projects.show', $project);
-    }
-
-    public function edit(Project $project)
-    {
-        $categories = Category::all();
-        return view('projects.edit', compact('project', 'categories'));
-    }
-
-    public function update(Request $request, Project $project)
-    {
-        $project->update($request->all());
         return redirect()->route('projects.show', $project);
     }
 }
