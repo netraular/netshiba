@@ -47,7 +47,7 @@
             <label for="logo">Logo del Proyecto</label>
             <input type="file" name="logo" class="form-control-file @error('logo') is-invalid @enderror" id="logoInput" accept="image/*">
             <div id="croppedLogo" style="display: none; margin-top: 10px;">
-                <img id="output" src="#" alt="Logo recortado" style="max-width: 100px;">
+                <img id="output" src="#" alt="Logo recortado" >
             </div>
             @error('logo')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -85,7 +85,7 @@
                 <div class="input-group mb-2">
                     <input type="text" name="links[]" class="form-control link-input" placeholder="URL del enlace" value="{{ $link }}">
                     <div class="input-group-append">
-                        <button type="button" class="btn btn-link text-danger p-0" onclick="removeLink(this)">
+                        <button type="button" class="btn btn-link text-danger pl-2" onclick="removeLink(this)">
                             <i class="bi bi-x-circle"></i>
                         </button>
                     </div>
@@ -102,7 +102,7 @@
                     <div class="input-group">
                         <input type="text" name="tags[]" class="form-control tag-input" placeholder="Tag" value="{{ $tag }}">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-link text-secondary p-0" onclick="removeTag(this)">
+                            <button type="button" class="btn btn-link text-danger pl-2" onclick="removeTag(this)">
                                 <i class="bi bi-x-circle"></i>
                             </button>
                         </div>
@@ -200,7 +200,7 @@
         newLinkGroup.innerHTML = `
             <input type="text" name="links[]" class="form-control link-input" placeholder="URL del enlace">
             <div class="input-group-append">
-                <button type="button" class="btn btn-link text-danger p-0" onclick="removeLink(this)">
+                <button type="button" class="btn btn-link text-danger pl-2" onclick="removeLink(this)">
                     <i class="bi bi-x-circle"></i>
                 </button>
             </div>
@@ -220,7 +220,7 @@
             <div class="input-group">
                 <input type="text" name="tags[]" class="form-control tag-input" placeholder="Tag">
                 <div class="input-group-append">
-                    <button type="button" class="btn btn-link text-secondary p-0" onclick="removeTag(this)">
+                    <button type="button" class="btn btn-link text-danger pl-2" onclick="removeTag(this)">
                         <i class="bi bi-x-circle"></i>
                     </button>
                 </div>
