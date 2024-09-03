@@ -31,10 +31,28 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
-        // Crear el proyecto
-        $project = Project::create($request->except('links', 'tags'));
-    
-        // Procesar los enlaces
+        $request->validate([
+            'name' => 'required',
+            'description' => 'nullable',
+            'category_id' => 'required|exists:categories,id',
+            'status' => 'required',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'background' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'complexity' => 'required|integer|min:1|max:10',
+        ]);
+
+        $projectData = $request->except('links', 'tags', 'logo', 'background');
+
+        if ($request->hasFile('logo')) {
+            $projectData['logo'] = $request->file('logo')->store('logos', 'public');
+        }
+
+        if ($request->hasFile('background')) {
+            $projectData['background'] = $request->file('background')->store('backgrounds', 'public');
+        }
+
+        $project = Project::create($projectData);
+
         if ($request->has('links')) {
             foreach ($request->links as $link) {
                 if (!empty($link)) {
@@ -42,8 +60,7 @@ class ProjectController extends Controller
                 }
             }
         }
-    
-        // Procesar los tags
+
         if ($request->has('tags')) {
             foreach ($request->tags as $tagName) {
                 if (!empty($tagName)) {
@@ -52,7 +69,7 @@ class ProjectController extends Controller
                 }
             }
         }
-    
+
         return redirect()->route('projects.show', $project);
     }
 

@@ -2,6 +2,11 @@
 @extends('layouts.app')
 
 @section('content')
+
+<link href="https://unpkg.com/cropperjs/dist/cropper.min.css" rel="stylesheet">
+<script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+
 <div class="container-xxl">
     <h1>Proyectos</h1>
     @auth
@@ -19,7 +24,7 @@
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div class="card h-100">
                     <!-- First Zone: Background Image -->
-                    <div class="card-img-top" style="background-image: url('{{ $project->background }}'); height: 150px; background-size: cover; background-position: center; position: relative;">
+                    <div class="card-img-top" style="@if(isset($project->background)) background-image: url('{{ asset('storage/'.$project->background) }}'); @endif height: 150px; background-size: cover; background-position: center; position: relative;">
                         <!-- Button for logged users -->
                         @auth
                         <div class="dropdown position-absolute top-0 end-0 m-2" style="z-index: 1;">
@@ -32,20 +37,18 @@
                         @endauth
                         <!-- Second Zone: Project Logo -->
                         <div class="d-flex justify-content-center align-items-center" style="position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%);">
-
                             @if($project->logo)
-                                <img src="{{ $project->logo }}" alt="{{ $project->name }}" class="rounded-circle bg-secondary" style="width: 100px; height: 100px;">
+                                <img src="{{ asset('storage/'.$project->logo) }}" alt="{{ $project->name }}" class="rounded-circle bg-secondary" style="width: 100px; height: 100px;">
                             @else
-                                <div class="text-center bg-secondary" style="width: 100px; height: 100px; line-height: 100px;border-radius: 50%;">
+                                <div class="text-center bg-secondary" style="width: 100px; height: 100px; line-height: 100px; border-radius: 50%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
                                     {{ $project->name }}
                                 </div>
                             @endif
-
                         </div>
                     </div>
                     <div class="card-body" style="margin-top: 50px;">
                         <!-- Second Zone: Project Name -->
-                        <h4 class="card-title text-center fw-bold">{{ $project->name }}</h4>
+                        <h4 class="card-title text-center fw-bold">{{$project->name}}</h4>
                         <!-- Third Zone: Description -->
                         <p class="card-text">{{ $project->description }}</p>
                         <!-- Fourth Zone: Category and Tags -->
@@ -56,11 +59,11 @@
                             @endforeach
                         </p>
                         <!-- Fifth Zone: Links -->
-                        <p class="card-text text-end">
+                        <p class="card-text text-center">
                             @foreach($project->links as $link)
                                 @if($link->hidden == 0 || ($link->hidden == 1 && Auth::check()))
-                                    <a style="font-size:22px;" href="{{ $link->url }}" class="px-2 py-0  btn btn-lg btn-outline-secondary {{ $link->class }}" title="{{ $link->name }}">
-                                        <i class=" text-info {{ $link->icon }}"></i>
+                                    <a style="font-size:22px;" href="{{ $link->url }}" class="px-2 py-0  btn btn-lg  {{ $link->class }}" title="{{ $link->name }}">
+                                        <i class="  {{ $link->icon }}"></i>
                                     </a>
                                 @endif
                             @endforeach
