@@ -44,7 +44,7 @@
             @enderror
         </div>
         <div class="form-group">
-            <label for="logo">Logo del Proyecto</label>
+            <p for="logo">Logo del Proyecto</p>
             <input type="file" name="logo" class="form-control-file @error('logo') is-invalid @enderror" id="logoInput" accept="image/*">
             <div id="croppedLogo" style="display: none; margin-top: 10px;">
                 <img id="output" src="#" alt="Logo recortado" >
@@ -54,8 +54,11 @@
             @enderror
         </div>
         <div class="form-group">
-            <label for="background">Banner del Proyecto</label>
-            <input type="file" name="background" class="form-control-file @error('background') is-invalid @enderror" accept="image/*">
+            <p for="background">Banner del Proyecto</p>
+            <input type="file" name="background" class="form-control-file @error('background') is-invalid @enderror" id="backgroundInput" accept="image/*">
+            <div id="backgroundPreview" style="display: none; margin-top: 10px;">
+                <img id="backgroundOutput" src="#" alt="Banner" style="max-width: 300px;">
+            </div>
             @error('background')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -83,6 +86,13 @@
             <div id="linksContainer">
                 @foreach(old('links', ['']) as $index => $link)
                 <div class="input-group mb-2">
+                    <input type="text" name="link_icons[]" class="form-control" placeholder="Icono">
+                    <input type="text" name="link_names[]" class="form-control" placeholder="Nombre del enlace">
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="link_ids[]" value="">
+                        <input type="checkbox" name="link_hiddens[]" class="form-check-input" value="">
+                        <label class="form-check-label">Oculto</label>
+                    </div>
                     <input type="text" name="links[]" class="form-control link-input" placeholder="URL del enlace" value="{{ $link }}">
                     <div class="input-group-append">
                         <button type="button" class="btn btn-link text-danger pl-2" onclick="removeLink(this)">
@@ -135,131 +145,6 @@
     </div>
 </div>
 
-<script>
-    document.getElementById('logoInput').addEventListener('change', loadFile);
+@vite('resources/js/projects/create.js')
 
-    function loadFile(event) {
-        var output = document.getElementById('output');
-        output.src = URL.createObjectURL(event.target.files[0]);
-        output.style.height = '8.75rem';
-        output.style.width = '140px'; // Asegura que el ancho sea siempre 140px
-        output.style.border = '2px dotted black';
-        output.style.borderRadius = '6px';
-
-        // Open the modal
-        $('#cropModal').modal('show');
-
-        // Initialize the cropper
-        var image = document.getElementById('image');
-        image.src = URL.createObjectURL(event.target.files[0]);
-        var cropper = new Cropper(image, {
-            aspectRatio: 1 / 1, // Square crop
-            viewMode: 1,
-            dragMode: 'move',
-            autoCropArea: 1,
-            cropBoxMovable: true,
-            cropBoxResizable: true,
-            responsive: true,
-            restore: false,
-            guides: false,
-            center: false,
-            highlight: false,
-            cropBoxMovable: true,
-            cropBoxResizable: true,
-            toggleDragModeOnDblclick: false,
-        });
-
-        // Handle the crop button click
-        document.getElementById('cropButton').addEventListener('click', function () {
-            var canvas = cropper.getCroppedCanvas();
-            output.src = canvas.toDataURL('image/jpeg', 0.9); // Convert to JPEG with 90% quality
-            $('#cropModal').modal('hide');
-            cropper.destroy();
-
-            // Convert canvas to Blob and create a new File object
-            canvas.toBlob(function (blob) {
-                var file = new File([blob], 'cropped_image.jpeg', { type: 'image/jpeg' });
-
-                // Create a new DataTransfer object
-                var dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-
-                // Set the file input's files to the new file
-                document.getElementById('logoInput').files = dataTransfer.files;
-
-                // Show the cropped image
-                document.getElementById('croppedLogo').style.display = 'block';
-            }, 'image/jpeg', 0.9); // Convert to JPEG with 90% quality
-        });
-    }
-
-    function addLinkInput() {
-        const linksContainer = document.getElementById('linksContainer');
-        const newLinkGroup = document.createElement('div');
-        newLinkGroup.className = 'input-group mb-2';
-        newLinkGroup.innerHTML = `
-            <input type="text" name="links[]" class="form-control link-input" placeholder="URL del enlace">
-            <div class="input-group-append">
-                <button type="button" class="btn btn-link text-danger pl-2" onclick="removeLink(this)">
-                    <i class="bi bi-x-circle"></i>
-                </button>
-            </div>
-        `;
-        linksContainer.appendChild(newLinkGroup);
-    }
-
-    function removeLink(button) {
-        button.closest('.input-group').remove();
-    }
-
-    function addTagInput() {
-        const tagsContainer = document.getElementById('tagsContainer');
-        const newTagGroup = document.createElement('div');
-        newTagGroup.className = 'col-md-2 mb-2';
-        newTagGroup.innerHTML = `
-            <div class="input-group">
-                <input type="text" name="tags[]" class="form-control tag-input" placeholder="Tag">
-                <div class="input-group-append">
-                    <button type="button" class="btn btn-link text-danger pl-2" onclick="removeTag(this)">
-                        <i class="bi bi-x-circle"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-        tagsContainer.appendChild(newTagGroup);
-    }
-
-    function removeTag(button) {
-        button.closest('.col-md-2').remove();
-    }
-
-    document.addEventListener('input', function(event) {
-        if (event.target.classList.contains('link-input')) {
-            const linksContainer = document.getElementById('linksContainer');
-            const linkInputs = linksContainer.querySelectorAll('.link-input');
-            const allFilled = Array.from(linkInputs).every(input => input.value.trim() !== '');
-
-            if (allFilled) {
-                addLinkInput();
-            }
-        } else if (event.target.classList.contains('tag-input')) {
-            const tagsContainer = document.getElementById('tagsContainer');
-            const tagInputs = tagsContainer.querySelectorAll('.tag-input');
-            const allFilled = Array.from(tagInputs).every(input => input.value.trim() !== '');
-
-            if (allFilled) {
-                addTagInput();
-            }
-        }
-    });
-
-    // Sync slider and input value
-    document.getElementById('complexityRange').addEventListener('input', function() {
-        document.getElementById('complexityValue').value = this.value;
-    });
-
-    document.getElementById('complexityValue').addEventListener('input', function() {
-        document.getElementById('complexityRange').value = this.value;
-    });
-</script>
 @endsection

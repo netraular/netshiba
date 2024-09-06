@@ -33,8 +33,4 @@ class Project extends Model
         return $this->hasMany(Link::class);
     }
 
-    public function notes()
-    {
-        return $this->hasMany(Note::class);
-    }
 }

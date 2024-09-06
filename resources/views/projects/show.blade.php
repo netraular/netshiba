@@ -13,15 +13,6 @@
         <li><a href="{{ $link->url }}">{{ $link->name }}</a></li>
         @endforeach
     </ul>
-    @auth
-    <h2>Notas</h2>
-    <a href="{{ route('notes.create', $project) }}" class="btn btn-primary">Añadir Nota</a>
-    <ul>
-        @foreach($project->notes as $note)
-        <li>{{ $note->explanation }}</li>
-        @endforeach
-    </ul>
-    @endauth
     <a href="{{ route('projects.index') }}" class="btn btn-secondary">Volver a la lista</a>
 </div>
 @endsection
