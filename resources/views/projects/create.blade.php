@@ -86,7 +86,11 @@
         </div>
 
         <div class="form-group">
-            <label>Enlaces</label>
+            <label>Enlaces 
+                <button type="button" class="btn btn-link text-success" onclick="addLinkInput()">
+                    <i class="bi bi-plus-square"></i>
+                </button>
+            </label>
             <div id="linksContainer">
                 @foreach(old('links', ['']) as $index => $link)
                 <div class="input-group mb-3">
@@ -115,14 +119,15 @@
                 </div>
                 @endforeach
             </div>
-            <button type="button" class="btn btn-primary" onclick="addLinkInput()">Agregar Enlace</button>
         </div>
 
-        <script>
-        </script>
 
         <div class="form-group">
-            <label>Tags</label>
+            <label>Tags
+                <button type="button" class="btn btn-link text-success" onclick="addTagInput()">
+                    <i class="bi bi-plus-square"></i>
+                </button>
+            </label>
             <div id="tagsContainer" class="row">
                 @foreach(old('tags', ['']) as $index => $tag)
                 <div class="col-md-2 mb-2">

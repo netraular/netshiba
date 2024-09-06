@@ -177,12 +177,19 @@ window.updateLinkHref = function(input) {
     const linkElement = input.parentElement.querySelector('a');
     linkElement.href = input.value.trim() || '#';
 
-    // Verificar si el enlace actual es el último
+    // Verificar si todos los inputs de "URL del enlace" están con texto
     const linkGroups = document.querySelectorAll('#linksContainer .input-group');
-    const lastLinkGroup = linkGroups[linkGroups.length - 1];
+    let allFilled = true;
 
-    if (input.parentElement === lastLinkGroup) {
-        // Agregar un nuevo grupo de enlaces si el enlace actual es el último
+    linkGroups.forEach(group => {
+        const urlInput = group.querySelector('.link-url-input');
+        if (!urlInput.value.trim()) {
+            allFilled = false;
+        }
+    });
+
+    // Si todos los inputs están llenos, agregar un nuevo grupo de enlaces
+    if (allFilled) {
         addLinkInput();
     }
 }
