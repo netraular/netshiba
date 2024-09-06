@@ -1,3 +1,6 @@
+
+// Image cropper
+
 document.getElementById('logoInput').addEventListener('change', loadFile);
 document.getElementById('backgroundInput').addEventListener('change', function(event) {
     const output = document.getElementById('backgroundOutput');
@@ -89,7 +92,28 @@ function loadFile(event) {
     });
 }
 
-function addLinkInput() {
+//Link control
+window.removeLink = function(button) {
+    button.closest('.input-group').remove();
+};
+
+window.moveLinkUp = function(button) {
+    const linkGroup = button.closest('.input-group');
+    const prevLinkGroup = linkGroup.previousElementSibling;
+    if (prevLinkGroup) {
+        linkGroup.parentNode.insertBefore(linkGroup, prevLinkGroup);
+    }
+};
+
+window.moveLinkDown = function(button) {
+    const linkGroup = button.closest('.input-group');
+    const nextLinkGroup = linkGroup.nextElementSibling;
+    if (nextLinkGroup) {
+        linkGroup.parentNode.insertBefore(nextLinkGroup, linkGroup);
+    }
+};
+
+window.addLinkInput = function() {
     const linksContainer = document.getElementById('linksContainer');
     const newLinkGroup = document.createElement('div');
     newLinkGroup.className = 'input-group mb-2';
@@ -106,16 +130,22 @@ function addLinkInput() {
             <button type="button" class="btn btn-link text-danger pl-2" onclick="removeLink(this)">
                 <i class="bi bi-x-circle"></i>
             </button>
+            <button type="button" class="btn btn-link text-primary pl-2" onclick="moveLinkUp(this)">
+                <i class="bi bi-arrow-up-circle"></i>
+            </button>
+            <button type="button" class="btn btn-link text-primary pl-2" onclick="moveLinkDown(this)">
+                <i class="bi bi-arrow-down-circle"></i>
+            </button>
         </div>
     `;
     linksContainer.appendChild(newLinkGroup);
 }
 
-function removeLink(button) {
-    button.closest('.input-group').remove();
-}
+window.removeTag = function(button) {
+    button.closest('.col-md-2').remove();
+};
 
-function addTagInput() {
+window.addTagInput = function() {
     const tagsContainer = document.getElementById('tagsContainer');
     const newTagGroup = document.createElement('div');
     newTagGroup.className = 'col-md-2 mb-2';
@@ -132,9 +162,6 @@ function addTagInput() {
     tagsContainer.appendChild(newTagGroup);
 }
 
-function removeTag(button) {
-    button.closest('.col-md-2').remove();
-}
 
 document.addEventListener('input', function(event) {
     if (event.target.classList.contains('link-input')) {
@@ -156,7 +183,8 @@ document.addEventListener('input', function(event) {
     }
 });
 
-// Sync slider and input value
+
+// Control slider
 document.getElementById('complexityRange').addEventListener('input', function() {
     document.getElementById('complexityValue').value = this.value;
 });
