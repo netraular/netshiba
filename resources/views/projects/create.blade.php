@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <h1>Añadir Proyecto</h1>
     <form action="{{ route('projects.store') }}" method="POST" enctype="multipart/form-data" id="projectForm">
         @csrf

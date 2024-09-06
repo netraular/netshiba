@@ -7,7 +7,7 @@
 <script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 
-<div class="container-xxl">
+<div class="container-fluid">
     <h1>Proyectos</h1>
     @auth
     <a href="{{ route('projects.create') }}" class="btn btn-primary">Añadir Proyecto</a>

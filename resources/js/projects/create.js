@@ -114,6 +114,7 @@ window.moveLinkDown = function(button) {
 };
 
 window.addLinkInput = function() {
+    alert('n');
     const linksContainer = document.getElementById('linksContainer');
     const newLinkGroup = document.createElement('div');
     newLinkGroup.className = 'input-group mb-2';
