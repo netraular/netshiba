@@ -129,20 +129,20 @@ window.addLinkInput = function() {
     newLinkGroup.innerHTML = `
         <input type="text" name="link_icons[]" class="form-control" placeholder="Icono">
         <input type="text" name="link_names[]" class="form-control" placeholder="Nombre del enlace">
-        <div class="form-check form-check-inline">
+        <div class="form-check form-check-inline d-flex align-items-center">
             <input type="hidden" name="link_ids[]" value="">
-            <input type="checkbox" name="link_hiddens[]" class="form-check-input" value="">
+            <input type="checkbox" name="link_hiddens[]" class="form-check-input p-2 m-1" value="">
             <label class="form-check-label">Oculto</label>
         </div>
         <input type="text" name="links[]" class="form-control link-input" placeholder="URL del enlace">
         <div class="input-group-append">
-            <button type="button" class="btn btn-link text-danger pl-2" onclick="removeLink(this)">
+            <button type="button" class="btn btn-link text-danger" onclick="removeLink(this)">
                 <i class="bi bi-x-circle"></i>
             </button>
-            <button type="button" class="btn btn-link text-primary pl-2" onclick="moveLinkUp(this)">
+            <button type="button" class="btn btn-link text-primary" onclick="moveLinkUp(this)">
                 <i class="bi bi-arrow-up-circle"></i>
             </button>
-            <button type="button" class="btn btn-link text-primary pl-2" onclick="moveLinkDown(this)">
+            <button type="button" class="btn btn-link text-primary" onclick="moveLinkDown(this)">
                 <i class="bi bi-arrow-down-circle"></i>
             </button>
         </div>
