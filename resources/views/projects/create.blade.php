@@ -89,15 +89,18 @@
             <label>Enlaces</label>
             <div id="linksContainer">
                 @foreach(old('links', ['']) as $index => $link)
-                <div class="input-group mb-2">
-                    <input type="text" name="link_icons[]" class="form-control" placeholder="Icono">
-                    <input type="text" name="link_names[]" class="form-control" placeholder="Nombre del enlace">
+                <div class="input-group mb-3">
+                    <a style="font-size:22px;" href="{{ old('links.' . $index, '#') }}" class="px-2 py-0 btn btn-lg" title="{{ old('link_names.' . $index, '') }}" target="_blank">
+                        <i class="bi {{ old('link_icons.' . $index, 'bi-link-45deg') }}"></i>
+                    </a>
+                    <input type="text" name="link_icons[]" class="form-control link-icon-input" placeholder="Icono" value="{{ old('link_icons.' . $index, '') }}" oninput="updateIcon(this)">
+                    <input type="text" name="link_names[]" class="form-control link-name-input" placeholder="Nombre del enlace" value="{{ old('link_names.' . $index, '') }}" oninput="updateLinkTitle(this)">
+                    <input type="text" name="links[]" class="form-control link-url-input" placeholder="URL del enlace" value="{{ old('links.' . $index, '') }}" oninput="updateLinkHref(this)">
                     <div class="form-check form-check-inline d-flex align-items-center">
                         <input type="hidden" name="link_ids[]" value="">
                         <input type="checkbox" name="link_hiddens[]" class="form-check-input p-2 m-1" value="">
                         <label class="form-check-label">Oculto</label>
                     </div>
-                    <input type="text" name="links[]" class="form-control link-input" placeholder="URL del enlace">
                     <div class="input-group-append">
                         <button type="button" class="btn btn-link text-danger" onclick="removeLink(this)">
                             <i class="bi bi-x-circle"></i>
@@ -112,7 +115,11 @@
                 </div>
                 @endforeach
             </div>
+            <button type="button" class="btn btn-primary" onclick="addLinkInput()">Agregar Enlace</button>
         </div>
+
+        <script>
+        </script>
 
         <div class="form-group">
             <label>Tags</label>

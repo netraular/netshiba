@@ -105,7 +105,6 @@ window.removeLink = function(button) {
         alert('No puedes eliminar el último enlace.');
     }
 };
-
 window.moveLinkUp = function(button) {
     const linkGroup = button.closest('.input-group');
     const prevLinkGroup = linkGroup.previousElementSibling;
@@ -125,16 +124,19 @@ window.moveLinkDown = function(button) {
 window.addLinkInput = function() {
     const linksContainer = document.getElementById('linksContainer');
     const newLinkGroup = document.createElement('div');
-    newLinkGroup.className = 'input-group mb-2';
+    newLinkGroup.className = 'input-group mb-3';
     newLinkGroup.innerHTML = `
-        <input type="text" name="link_icons[]" class="form-control" placeholder="Icono">
-        <input type="text" name="link_names[]" class="form-control" placeholder="Nombre del enlace">
+        <a style="font-size:22px;" href="#" class="px-2 py-0 btn btn-lg" title="" target="_blank">
+            <i class="bi bi-link-45deg"></i>
+        </a>
+        <input type="text" name="link_icons[]" class="form-control link-icon-input" placeholder="Icono" oninput="updateIcon(this)">
+        <input type="text" name="link_names[]" class="form-control link-name-input" placeholder="Nombre del enlace" oninput="updateLinkTitle(this)">
+        <input type="text" name="links[]" class="form-control link-url-input" placeholder="URL del enlace" oninput="updateLinkHref(this)">
         <div class="form-check form-check-inline d-flex align-items-center">
             <input type="hidden" name="link_ids[]" value="">
             <input type="checkbox" name="link_hiddens[]" class="form-check-input p-2 m-1" value="">
             <label class="form-check-label">Oculto</label>
         </div>
-        <input type="text" name="links[]" class="form-control link-input" placeholder="URL del enlace">
         <div class="input-group-append">
             <button type="button" class="btn btn-link text-danger" onclick="removeLink(this)">
                 <i class="bi bi-x-circle"></i>
@@ -148,6 +150,45 @@ window.addLinkInput = function() {
         </div>
     `;
     linksContainer.appendChild(newLinkGroup);
+}
+
+window.updateIcon = function(input) {
+    const linkElement = input.parentElement.querySelector('a');
+    const iconClass = input.value.trim();
+    
+    // Limpiar clases anteriores
+    linkElement.querySelector('i').className = 'bi';
+    
+    // Agregar la nueva clase del icono
+    if (iconClass) {
+        linkElement.querySelector('i').classList.add(iconClass);
+    } else {
+        // Si no hay valor, mostrar el icono por defecto
+        linkElement.querySelector('i').classList.add('bi-link-45deg');
+    }
+}
+
+window.updateLinkTitle = function(input) {
+    const linkElement = input.parentElement.querySelector('a');
+    linkElement.title = input.value.trim();
+}
+
+window.updateLinkHref = function(input) {
+    const linkElement = input.parentElement.querySelector('a');
+    linkElement.href = input.value.trim() || '#';
+
+    // Verificar si el enlace actual es el último
+    const linkGroups = document.querySelectorAll('#linksContainer .input-group');
+    const lastLinkGroup = linkGroups[linkGroups.length - 1];
+
+    if (input.parentElement === lastLinkGroup) {
+        // Agregar un nuevo grupo de enlaces si el enlace actual es el último
+        addLinkInput();
+    }
+}
+
+function removeLink(button) {
+    button.closest('.input-group').remove();
 }
 
 window.removeTag = function(button) {
