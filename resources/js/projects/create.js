@@ -94,7 +94,16 @@ function loadFile(event) {
 
 //Link control
 window.removeLink = function(button) {
-    button.closest('.input-group').remove();
+    const linkGroup = button.closest('.input-group');
+    const linksContainer = document.getElementById('linksContainer');
+    const linkGroups = linksContainer.querySelectorAll('.input-group');
+
+    // Verificar si hay más de un grupo de enlaces
+    if (linkGroups.length > 1) {
+        linkGroup.remove();
+    } else {
+        alert('No puedes eliminar el último enlace.');
+    }
 };
 
 window.moveLinkUp = function(button) {
@@ -114,7 +123,6 @@ window.moveLinkDown = function(button) {
 };
 
 window.addLinkInput = function() {
-    alert('n');
     const linksContainer = document.getElementById('linksContainer');
     const newLinkGroup = document.createElement('div');
     newLinkGroup.className = 'input-group mb-2';
@@ -143,7 +151,16 @@ window.addLinkInput = function() {
 }
 
 window.removeTag = function(button) {
-    button.closest('.col-md-2').remove();
+    const tagGroup = button.closest('.col-md-2');
+    const tagsContainer = document.getElementById('tagsContainer');
+    const tagGroups = tagsContainer.querySelectorAll('.col-md-2');
+
+    // Verificar si hay más de un grupo de etiquetas
+    if (tagGroups.length > 1) {
+        tagGroup.remove();
+    } else {
+        alert('No puedes eliminar la última etiqueta.');
+    }
 };
 
 window.addTagInput = function() {
