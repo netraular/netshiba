@@ -32,6 +32,13 @@
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <li><a class="dropdown-item" href="{{ route('projects.show', $project) }}">Detalles</a></li>
                                 <li><a class="dropdown-item" href="{{ route('projects.edit', $project) }}">Editar</a></li>
+                                <li>
+                                    <form action="{{ route('projects.destroy', $project) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este proyecto?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="dropdown-item text-danger">Eliminar</button>
+                                    </form>
+                                </li>
                             </ul>
                         </div>
                         @endauth

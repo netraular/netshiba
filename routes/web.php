@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
     Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
     Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
+    Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
     Route::get('/projects/{project}/notes/create', [NoteController::class, 'create'])->name('notes.create');
     Route::post('/projects/{project}/notes', [NoteController::class, 'store'])->name('notes.store');
