@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
-use Illuminate\Http\Request;
-
 use App\Models\Category;
 use App\Models\Tag;
 use App\Models\Link;
+use App\Models\Status;
+use Illuminate\Http\Request;
+
 class ProjectController extends Controller
 {
     public function index(Request $request)
@@ -25,7 +26,7 @@ class ProjectController extends Controller
     {
         $categories = Category::all();
         $tags = Tag::all();
-        $statuses = ['En proceso', 'Terminado', 'Idea'];
+        $statuses = Status::all();
     
         return view('projects.create', compact('categories', 'tags', 'statuses'));
     }
@@ -36,7 +37,7 @@ class ProjectController extends Controller
             'name' => 'required',
             'description' => 'nullable',
             'category_id' => 'required|exists:categories,id',
-            'status' => 'required',
+            'status_id' => 'required|exists:statuses,id',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'background' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'complexity' => 'required|integer|min:1|max:10',
@@ -78,11 +79,12 @@ class ProjectController extends Controller
 
         return redirect()->route('projects.show', $project);
     }
+
     public function edit(Project $project)
     {
         $categories = Category::all();
         $tags = Tag::all();
-        $statuses = ['En proceso', 'Terminado', 'Idea'];
+        $statuses = Status::all();
         return view('projects.edit', compact('project', 'categories', 'tags', 'statuses'));
     }
 
@@ -92,7 +94,7 @@ class ProjectController extends Controller
             'name' => 'required',
             'description' => 'nullable',
             'category_id' => 'required|exists:categories,id',
-            'status' => 'required',
+            'status_id' => 'required|exists:statuses,id',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'background' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'complexity' => 'required|integer|min:1|max:10',
