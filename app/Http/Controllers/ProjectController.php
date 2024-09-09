@@ -45,53 +45,54 @@ class ProjectController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'description' => 'nullable',
-            'category_id' => 'required|exists:categories,id',
-            'status_id' => 'required|exists:statuses,id',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'background' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'complexity' => 'required|integer|min:1|max:10',
-        ]);
+{
+    $request->validate([
+        'name' => 'required',
+        'description' => 'nullable',
+        'category_id' => 'required|exists:categories,id',
+        'status_id' => 'required|exists:statuses,id',
+        'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'background' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'complexity' => 'required|integer|min:1|max:10',
+    ]);
 
-        $projectData = $request->except('links', 'tags', 'logo', 'background', 'link_icons', 'link_names', 'link_hiddens');
+    $projectData = $request->except('links', 'tags', 'logo', 'background', 'link_icons', 'link_names', 'link_hiddens', 'link_orders');
 
-        if ($request->hasFile('logo')) {
-            $projectData['logo'] = $request->file('logo')->store('logos', 'public');
-        }
-
-        if ($request->hasFile('background')) {
-            $projectData['background'] = $request->file('background')->store('backgrounds', 'public');
-        }
-
-        $project = Project::create($projectData);
-
-        if ($request->has('links')) {
-            foreach ($request->links as $index => $link) {
-                if (!empty($link)) {
-                    $project->links()->create([
-                        'url' => $link,
-                        'icon' => $request->link_icons[$index] ?? '',
-                        'name' => $request->link_names[$index] ?? '',
-                        'hidden' => isset($request->link_hiddens[$index]) ? 1 : 0,
-                    ]);
-                }
-            }
-        }
-
-        if ($request->has('tags')) {
-            foreach ($request->tags as $tagName) {
-                if (!empty($tagName)) {
-                    $tag = Tag::firstOrCreate(['name' => $tagName]);
-                    $project->tags()->attach($tag);
-                }
-            }
-        }
-
-        return redirect()->route('projects.show', $project);
+    if ($request->hasFile('logo')) {
+        $projectData['logo'] = $request->file('logo')->store('logos', 'public');
     }
+
+    if ($request->hasFile('background')) {
+        $projectData['background'] = $request->file('background')->store('backgrounds', 'public');
+    }
+
+    $project = Project::create($projectData);
+
+    if ($request->has('links')) {
+        foreach ($request->links as $index => $link) {
+            if (!empty($link)) {
+                $project->links()->create([
+                    'url' => $link,
+                    'icon' => $request->link_icons[$index] ?? '',
+                    'name' => $request->link_names[$index] ?? '',
+                    'hidden' => isset($request->link_hiddens[$index]) ? 1 : 0,
+                    'order' => $index + 1, // Guardar el orden basado en el índice
+                ]);
+            }
+        }
+    }
+
+    if ($request->has('tags')) {
+        foreach ($request->tags as $tagName) {
+            if (!empty($tagName)) {
+                $tag = Tag::firstOrCreate(['name' => $tagName]);
+                $project->tags()->attach($tag);
+            }
+        }
+    }
+
+    return redirect()->route('projects.show', $project);
+}
 
     public function edit(Project $project)
     {
@@ -113,7 +114,7 @@ class ProjectController extends Controller
             'complexity' => 'required|integer|min:1|max:10',
         ]);
 
-        $projectData = $request->except('links', 'tags', 'logo', 'background', 'link_icons', 'link_names', 'link_hiddens', 'link_ids', 'link_delete');
+        $projectData = $request->except('links', 'tags', 'logo', 'background', 'link_icons', 'link_names', 'link_hiddens', 'link_orders', 'link_ids', 'link_delete');
 
         if ($request->hasFile('logo')) {
             $projectData['logo'] = $request->file('logo')->store('logos', 'public');
@@ -127,6 +128,13 @@ class ProjectController extends Controller
 
         // Update links
         if ($request->has('links')) {
+            $linkIds = $request->link_ids ?? [];
+            $linksToDelete = $project->links->pluck('id')->diff($linkIds);
+
+            foreach ($linksToDelete as $linkId) {
+                Link::where('id', $linkId)->delete();
+            }
+
             foreach ($request->links as $index => $link) {
                 if (!empty($link)) {
                     $linkId = $request->link_ids[$index] ?? null;
@@ -142,6 +150,7 @@ class ProjectController extends Controller
                             'icon' => $request->link_icons[$index] ?? '',
                             'name' => $request->link_names[$index] ?? '',
                             'hidden' => isset($request->link_hiddens[$index]) ? 1 : 0,
+                            'order' => $index + 1, // Guardar el orden basado en el índice
                         ];
 
                         if ($linkId) {
@@ -152,6 +161,9 @@ class ProjectController extends Controller
                     }
                 }
             }
+        } else {
+            // Si no se envían enlaces, eliminar todos los enlaces del proyecto
+            $project->links()->delete();
         }
 
         // Update tags

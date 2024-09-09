@@ -38,7 +38,9 @@
                         <!-- Second Zone: Project Logo -->
                         <div class="d-flex justify-content-center align-items-center" style="position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%);">
                             @if($project->logo)
-                                <img src="{{ asset('storage/'.$project->logo) }}" alt="{{ $project->name }}" class="rounded-circle bg-secondary" style="width: 100px; height: 100px;">
+                                <a target="_blank" href="{{ $project->links->first()->url ?? '#' }}" class="logo-link">
+                                    <img src="{{ asset('storage/'.$project->logo) }}" alt="{{ $project->name }}" class="rounded-circle bg-secondary" style="width: 100px; height: 100px;">
+                                </a>
                             @else
                                 <div class="text-center bg-secondary" style="width: 100px; height: 100px; line-height: 100px; border-radius: 50%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
                                     {{ $project->name }}
