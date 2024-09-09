@@ -97,13 +97,7 @@ window.removeLink = function(button) {
     const linkGroup = button.closest('.input-group');
     const linksContainer = document.getElementById('linksContainer');
     const linkGroups = linksContainer.querySelectorAll('.input-group');
-
-    // Verificar si hay más de un grupo de enlaces
-    if (linkGroups.length > 1) {
-        linkGroup.remove();
-    } else {
-        alert('No puedes eliminar el último enlace.');
-    }
+    linkGroup.remove();
 };
 window.moveLinkUp = function(button) {
     const linkGroup = button.closest('.input-group');
@@ -202,13 +196,7 @@ window.removeTag = function(button) {
     const tagGroup = button.closest('.col-md-2');
     const tagsContainer = document.getElementById('tagsContainer');
     const tagGroups = tagsContainer.querySelectorAll('.col-md-2');
-
-    // Verificar si hay más de un grupo de etiquetas
-    if (tagGroups.length > 1) {
-        tagGroup.remove();
-    } else {
-        alert('No puedes eliminar la última etiqueta.');
-    }
+    tagGroup.remove();
 };
 
 window.addTagInput = function() {

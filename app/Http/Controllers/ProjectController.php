@@ -8,12 +8,25 @@ use App\Models\Tag;
 use App\Models\Link;
 use App\Models\Status;
 use Illuminate\Http\Request;
+use Auth;
 
 class ProjectController extends Controller
 {
     public function index(Request $request)
     {
-        $projects = Project::with('versions', 'tags', 'links')->get();
+        $projects = Project::with(['versions', 'tags', 'links' => function ($query) {
+            $query->orderBy('order')->orderBy('id');
+        }])->get();
+
+        // Filtrar enlaces ocultos si el usuario no está autenticado
+        if (!Auth::check()) {
+            $projects->each(function ($project) {
+                $project->links = $project->links->filter(function ($link) {
+                    return $link->hidden == 0;
+                });
+            });
+        }
+
         return view('projects.index', compact('projects'));
     }
 

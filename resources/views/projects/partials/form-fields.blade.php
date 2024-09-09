@@ -45,6 +45,11 @@
     @error('logo')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
+    @if(isset($project) and $project->logo)
+        <div class="mt-2">
+            <img src="{{ asset('storage/' . $project->logo) }}" alt="Logo actual" style="max-width: 100px;">
+        </div>
+    @endif
 </div>
 <div class="form-group">
     <p for="background">Banner del Proyecto</p>
@@ -55,6 +60,11 @@
     @error('background')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
+    @if(isset($project) and $project->background)
+        <div class="mt-2">
+            <img src="{{ asset('storage/' . $project->background) }}" alt="Banner actual" style="max-width: 300px;">
+        </div>
+    @endif
 </div>
 <div class="form-group">
     <label for="complexity">Complejidad (1-10)</label>

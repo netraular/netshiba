@@ -62,8 +62,8 @@
                         <p class="card-text text-center">
                             @foreach($project->links as $link)
                                 @if($link->hidden == 0 || ($link->hidden == 1 && Auth::check()))
-                                    <a style="font-size:22px;" href="{{ $link->url }}" class="px-2 py-0  btn btn-lg  {{ $link->class }}" title="{{ $link->name }}">
-                                        <i class="  {{ $link->icon }}"></i>
+                                    <a style="font-size:22px;" href="{{ $link->url }}" class="px-2 py-0 btn btn-lg " title="{{ $link->name }}">
+                                        <i class=" {{ $link->hidden ? 'text-secondary' : '' }} {{ $link->icon }}"></i>
                                     </a>
                                 @endif
                             @endforeach

@@ -23,7 +23,7 @@
                     <form action="{{ route('statuses.destroy', $status) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro?')">Eliminar</button>
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar el estado [ {{$status->name}} ]?')">Eliminar</button>
                     </form>
                 </td>
             </tr>
