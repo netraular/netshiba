@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Netshiba</title>
+        <title>Showcase</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -17,7 +17,7 @@
 
     </body>
     <footer class="py-16 text-center text-sm text-black dark:text-white/70">
-        Netshiba ©
+        raular.com ©
     </footer>
              
     </body>
